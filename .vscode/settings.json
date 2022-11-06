@@ -22,12 +22,8 @@
   "go.useLanguageServer": true,
   "go.toolsManagement.autoUpdate": false,
   "go.toolsManagement.checkForUpdates": "off",
-  "go.inlayHints.parameterNames": true,
-  "go.inlayHints.functionTypeParameters": true,
-  "go.inlayHints.rangeVariableTypes": true,
-  "go.inlayHints.constantValues":true,
   "gopls": {
-    "buildFlags": ["-tags", "local_development"],
+    "buildFlags": [],
     "formatting.gofumpt": true,
     "formatting.local": "github.com/peterldowns/jumppointsearch",
     "build.directoryFilters": []
