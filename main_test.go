@@ -13,7 +13,7 @@ import (
 	"github.com/peterldowns/jumppointsearch/pkg/mapfile"
 )
 
-func TestDFS(t *testing.T) {
+func TestSimpleDFS(t *testing.T) {
 	m, err := mapfile.NewMap(strings.TrimSpace(`
 type octile
 height 8
@@ -57,17 +57,15 @@ map
 	}
 }
 
-func TestBigBoy(t *testing.T) {
+func TestAllScenarios_ca_cave(t *testing.T) {
 	scf, err := benchmarkdata.LoadScenarioFile("ca_cave")
 	require.NoError(t, err)
 	m, err := benchmarkdata.LoadMap(scf.Scenarios[0].Map)
 	require.NoError(t, err)
 	dfs := algorithms.NewDFS(*m)
 
-	for _, se := range scf.Scenarios {
-		result, err := dfs.FindPath(se.StartX, se.StartY, se.GoalX, se.GoalY)
-		assert.Error(t, err)
-		fmt.Println(m.Render(result.Path))
-		break
+	for i, se := range scf.Scenarios {
+		_, err := dfs.FindPath(se.StartX, se.StartY, se.GoalX, se.GoalY)
+		assert.NoError(t, err, fmt.Sprintf("scenario %d failed", i))
 	}
 }
