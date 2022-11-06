@@ -62,27 +62,6 @@ func (m *Map) Render(path []Node) string {
 	return b.String()
 }
 
-func (m *Map) Neighbors(n Node) []Node {
-	var valid []Node
-	for _, candidate := range []Node{
-		{n.X - 1, n.Y, TerrainInvalid},
-		{n.X + 1, n.Y, TerrainInvalid},
-		{n.X, n.Y - 1, TerrainInvalid},
-		{n.X, n.Y + 1, TerrainInvalid},
-		// Diagonals not yet implemented
-		// {n.X - 1, n.Y - 1, TerrainInvalid},
-		// {n.X - 1, n.Y + 1, TerrainInvalid},
-		// {n.X + 1, n.Y + 1, TerrainInvalid},
-		// {n.X + 1, n.Y - 1, TerrainInvalid},
-	} {
-		tmp, err := m.Get(candidate.X, candidate.Y)
-		if err == nil {
-			valid = append(valid, tmp)
-		}
-	}
-	return valid
-}
-
 func NewMapFromFS(fs embed.FS, path string) (*Map, error) {
 	file, err := fs.Open(path)
 	if err != nil {
