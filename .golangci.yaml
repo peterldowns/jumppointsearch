@@ -102,7 +102,6 @@ linters:
     - unparam
     - unused
     - whitespace
-    - wrapcheck
 issues:
   exclude:
     # Allow shadowing of `err` because it's so common
