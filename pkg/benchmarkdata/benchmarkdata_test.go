@@ -16,7 +16,7 @@ func TestLoadCACaveMap(t *testing.T) {
 	assert.Equal(t, m.Height, 277)
 	assert.Equal(t, m.Width, 183)
 	assert.Len(t, m.Data, 277*183)
-	assert.Equal(t, mapfile.TerrainPassable, m.Must(62, 48))
+	assert.Equal(t, mapfile.TerrainPassable, m.Must(62, 48).Terrain)
 	// This should be the topmost . here
 	// @@@@@@@@@
 	// @@@@@@@@@

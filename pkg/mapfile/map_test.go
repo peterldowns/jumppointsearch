@@ -53,7 +53,7 @@ O@@@O
 		for x, expected := range values {
 			actual, err := m.Get(x, y)
 			assert.NoError(t, err)
-			assert.Equal(t, expected, actual, fmt.Sprintf("x=%d y=%d", x, y))
+			assert.Equal(t, expected, actual.Terrain, fmt.Sprintf("x=%d y=%d", x, y))
 		}
 	}
 
