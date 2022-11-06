@@ -2,6 +2,8 @@ linters-settings:
   gocritic:
     disabled-checks:
       - ifElseChain
+  goimports:
+    local-prefixes: github.com/peterldowns/jumppointsearch
   govet:
     enable-all: true
     disable:

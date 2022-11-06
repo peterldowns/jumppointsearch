@@ -2,6 +2,7 @@ package mapfile
 
 import (
 	"bufio"
+	"bytes"
 	"embed"
 	"fmt"
 	"io"
@@ -9,30 +10,77 @@ import (
 	"strings"
 )
 
+type Node struct {
+	X       int
+	Y       int
+	Terrain Terrain
+}
+
 type Map struct {
 	Type   string
 	Height int
 	Width  int
-	Data   []Terrain
+	Data   []Node
 }
 
-func (m *Map) Must(x, y int) Terrain {
-	t, err := m.Get(x, y)
+func (m *Map) Must(x, y int) Node {
+	n, err := m.Get(x, y)
 	if err != nil {
 		panic(err)
 	}
-	return t
+	return n
 }
 
-func (m *Map) Get(x, y int) (Terrain, error) {
+func (m *Map) Get(x, y int) (Node, error) {
 	if x < 0 || x >= m.Width {
-		return TerrainInvalid, fmt.Errorf("x=%d is out of [0, %d) bounds", x, m.Width)
+		return Node{}, fmt.Errorf("x=%d is out of [0, %d) bounds", x, m.Width)
 	}
 	if y < 0 || y >= m.Height {
-		return TerrainInvalid, fmt.Errorf("y=%d is out of [0, %d) bounds", y, m.Height)
+		return Node{}, fmt.Errorf("y=%d is out of [0, %d) bounds", y, m.Height)
 	}
 	idx := y*m.Width + x
 	return m.Data[idx], nil
+}
+
+func (m *Map) Render(path []Node) string {
+	var b bytes.Buffer
+
+	inPath := map[Node]struct{}{}
+	for _, node := range path {
+		inPath[node] = struct{}{}
+	}
+	for i, node := range m.Data {
+		if i != 0 && i%m.Width == 0 {
+			b.WriteRune('\n')
+		}
+		if _, ok := inPath[node]; ok {
+			b.WriteRune('\'')
+		} else {
+			b.WriteString(string(node.Terrain))
+		}
+	}
+	return b.String()
+}
+
+func (m *Map) Neighbors(n Node) []Node {
+	var valid []Node
+	for _, candidate := range []Node{
+		{n.X - 1, n.Y, TerrainInvalid},
+		{n.X + 1, n.Y, TerrainInvalid},
+		{n.X, n.Y - 1, TerrainInvalid},
+		{n.X, n.Y + 1, TerrainInvalid},
+		// Diagonals not yet implemented
+		// {n.X - 1, n.Y - 1, TerrainInvalid},
+		// {n.X - 1, n.Y + 1, TerrainInvalid},
+		// {n.X + 1, n.Y + 1, TerrainInvalid},
+		// {n.X + 1, n.Y - 1, TerrainInvalid},
+	} {
+		tmp, err := m.Get(candidate.X, candidate.Y)
+		if err == nil {
+			valid = append(valid, tmp)
+		}
+	}
+	return valid
 }
 
 func NewMapFromFS(fs embed.FS, path string) (*Map, error) {
@@ -120,8 +168,8 @@ func getWidth(scanner *bufio.Scanner) (int, error) {
 	return int(i), nil
 }
 
-func getMap(scanner *bufio.Scanner, width, height int) ([]Terrain, error) {
-	data := make([]Terrain, 0, width*height)
+func getMap(scanner *bufio.Scanner, width, height int) ([]Node, error) {
+	data := make([]Node, 0, width*height)
 	var t Terrain
 	var err error
 	if !scanner.Scan() {
@@ -131,15 +179,19 @@ func getMap(scanner *bufio.Scanner, width, height int) ([]Terrain, error) {
 	if skip != "map" {
 		return nil, fmt.Errorf("invalid map line: '%s'", skip)
 	}
+	y := 0
 	for scanner.Scan() {
 		line := scanner.Text()
+		x := 0
 		for _, char := range line {
 			t, err = NewTerrain(string(char))
-			data = append(data, t)
 			if err != nil {
 				break
 			}
+			data = append(data, Node{X: x, Y: y, Terrain: t})
+			x++
 		}
+		y++
 	}
 	return data, err
 }
