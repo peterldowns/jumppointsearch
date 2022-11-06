@@ -1,0 +1,47 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    ".go/": true
+  },
+  "explorer.expandSingleFolderWorkspaces": true,
+  "go.autocompleteUnimportedPackages": true,
+  "go.coverOnSingleTest": true,
+  "go.coverOnSingleTestFile": true,
+  "go.lintTool": "golangci-lint",
+  "go.lintFlags": ["--config=${workspaceFolder}/.golangci.yaml", "--fast", "--fix"],
+  "go.lintOnSave": "package",
+  "go.testEnvVars": {
+    "ENVIRONMENT": "testing",
+    "TZ": "UTC"
+  },
+  "go.testFlags": [],
+  "go.coverageOptions": "showCoveredCodeOnly",
+  "go.buildOnSave": "off",
+  "go.vetOnSave": "off",
+  "go.useLanguageServer": true,
+  "go.toolsManagement.autoUpdate": false,
+  "go.toolsManagement.checkForUpdates": "off",
+  "go.inlayHints.parameterNames": true,
+  "go.inlayHints.functionTypeParameters": true,
+  "go.inlayHints.rangeVariableTypes": true,
+  "go.inlayHints.constantValues":true,
+  "gopls": {
+    "buildFlags": ["-tags", "local_development"],
+    "formatting.gofumpt": true,
+    "formatting.local": "github.com/peterldowns/jumppointsearch",
+    "build.directoryFilters": []
+  },
+  "[go]": {
+    "editor.formatOnSave": true
+  },
+  "nix.formatterPath": "nixpkgs-fmt",
+  "[nix]": {
+    "editor.formatOnSave": true
+  },
+  "editor.inlayHints.padding": true,
+  "editor.inlayHints.enabled": "offUnlessPressed",
+  "go.inlayHints.compositeLiteralTypes": true,
+  "go.inlayHints.compositeLiteralFields": true,
+  "go.inlayHints.assignVariableTypes": false
+}
